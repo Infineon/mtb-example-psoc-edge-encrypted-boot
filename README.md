@@ -6,7 +6,7 @@ This code example has a three project structure: CM33 secure, CM33 non-secure, a
 
 [View this README on GitHub.](https://github.com/Infineon/mtb-example-psoc-edge-encrypted-boot)
 
-[Provide feedback on this code example.](https://cypress.co1.qualtrics.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyNDE1MjEiLCJTcGVjIE51bWJlciI6IjAwMi00MTUyMSIsIkRvYyBUaXRsZSI6IlBTT0MmdHJhZGU7IEVkZ2UgTUNVOiBFbmNyeXB0ZWQgYm9vdCIsInJpZCI6InJhdmlraXJhbiIsIkRvYyB2ZXJzaW9uIjoiMi4wLjAiLCJEb2MgTGFuZ3VhZ2UiOiJFbmdsaXNoIiwiRG9jIERpdmlzaW9uIjoiTUNEIiwiRG9jIEJVIjoiSUNXIiwiRG9jIEZhbWlseSI6IlBTT0MifQ==)
+[Provide feedback on this code example.](https://cypress.co1.qualtrics.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyNDE1MjEiLCJTcGVjIE51bWJlciI6IjAwMi00MTUyMSIsIkRvYyBUaXRsZSI6IlBTT0MmdHJhZGU7IEVkZ2UgTUNVOiBFbmNyeXB0ZWQgYm9vdCIsInJpZCI6InJhdmlraXJhbiIsIkRvYyB2ZXJzaW9uIjoiMi4wLjEiLCJEb2MgTGFuZ3VhZ2UiOiJFbmdsaXNoIiwiRG9jIERpdmlzaW9uIjoiTUNEIiwiRG9jIEJVIjoiSUNXIiwiRG9jIEZhbWlseSI6IlBTT0MifQ==)
 
 See the [Design and implementation](docs/design_and_implementation.md) for the functional description of this code example.
 
@@ -164,19 +164,19 @@ The OEM policy file (*policy_oem_provisioning.json*) is located in the *[applica
 10. Genearte the AES-128 Key for image encryption using this command:
 
     ```
-    edgeprotecttools create-key --key-type AES128 --output aes128_key.bin
+    edgeprotecttools create-key --key-type AES128 --output keys/aes128_key.bin
     ```
 
 11. Generate the key encryption key (KEK) using this command:
  
     ```
-    edgeprotecttools create-key --key-type ECDSA-P256 --output enc-ec256-priv.pem enc-ec256-pub.pem
+    edgeprotecttools create-key --key-type ECDSA-P256 --output keys/enc-ec256-priv.pem keys/enc-ec256-pub.pem
     ```
  
 12. Convert the pem private key to the DER-PKCS8 format using this command:
  
     ```
-    edgeprotecttools convert-key -k enc-ec256-priv.pem -o enc-ec256-priv.bin -f DER-PKCS8
+    edgeprotecttools convert-key -k keys/enc-ec256-priv.pem -o keys/enc-ec256-priv.bin -f DER-PKCS8
     ```
 
 13. Program the encryption keys:
@@ -186,13 +186,13 @@ The OEM policy file (*policy_oem_provisioning.json*) is located in the *[applica
     - For EPC2 device, use this command:
 
         ```
-        openocd.exe -s scripts -f interface/kitprog3.cfg -f target/infineon/pse84xgxs2.cfg -c "init; reset init; flash write_image enc-ec256-priv.bin 0x32039000; reset; shutdown"
+        openocd.exe -s scripts -f interface/kitprog3.cfg -f target/infineon/pse84xgxs2.cfg -c "init; reset init; flash write_image keys/enc-ec256-priv.bin 0x32039000; reset; shutdown"
         ```
             
     - For EPC4 device, use this command:
 
         ```
-        openocd.exe -s scripts -f interface/kitprog3.cfg -f target/infineon/pse84xgxs24.cfg -c "init; reset init; flash write_image enc-ec256-priv.bin 0x32039000; reset; shutdown"
+        openocd.exe -s scripts -f interface/kitprog3.cfg -f target/infineon/pse84xgxs24.cfg -c "init; reset init; flash write_image keys/enc-ec256-priv.bin 0x32039000; reset; shutdown"
         ```
 
 
@@ -306,6 +306,7 @@ Document title: *CE241521* – *PSOC&trade; Edge MCU:  Encrypted boot*
  ------- | ---------------------
  1.x.0   | New code example <br> Early access release
  2.0.0   | GitHub release
+ 2.0.1   | Updated README instructions
 <br>
 
 
