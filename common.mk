@@ -28,7 +28,7 @@ MTB_TYPE=PROJECT
 
 # Target board/hardware (BSP).
 # To change the target, it is recommended to use the Library manager
-# ('make library-manager' from command line), which will also update 
+# ('make library-manager' from command line), which will also update
 # Eclipse IDE launch configurations.
 TARGET=KIT_PSE84_EVAL_EPC2
 
@@ -52,25 +52,29 @@ TOOLCHAIN=GCC_ARM
 # Debug -- build with minimal optimizations, focus on debugging.
 # Release -- build with full optimizations
 # Custom -- build with custom configuration, set the optimization flag in CFLAGS
-# 
-# If CONFIG is manually edited, ensure to update or regenerate 
+#
+# If CONFIG is manually edited, ensure to update or regenerate
 # launch configurations for your IDE.
 CONFIG?=Debug
 
-# DEfine Boot Image or Update Image
+# Define Boot Image or Update Image
 IMG_TYPE?=BOOT
 
 ifeq ($(IMG_TYPE),BOOT)
 DEFINES+=BOOT_IMAGE
+else
+ifeq ($(IMG_TYPE),UPDATE)
+DEFINES+=UPDATE_IMAGE
+endif
 endif
 
 #Config file for postbuild sign and merge operations.
 #NOTE:Check the JSON file for the command parameters
 COMBINE_SIGN_JSON?=
 # Building ifx-mcuboot with ARM compiler requries some
-# specific symbols. However, linking when ifx-mcuboot is 
+# specific symbols. However, linking when ifx-mcuboot is
 # added as a library to an existing project,
-# those symbols are not required. Excluding those symbols, 
+# those symbols are not required. Excluding those symbols,
 #which are not needed for this application build
 ifeq ($(TOOLCHAIN),ARM)
   DEFINES+=MCUBOOT_SKIP_CLEANUP_RAM=1
