@@ -7,7 +7,7 @@ This code example has a three project structure: CM33 secure, CM33 non-secure, a
 
 [View this README on GitHub.](https://github.com/Infineon/mtb-example-psoc-edge-encrypted-boot)
 
-[Provide feedback on this code example.](https://yourvoice.infineon.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyNDE1MjEiLCJTcGVjIE51bWJlciI6IjAwMi00MTUyMSIsIkRvYyBUaXRsZSI6IlBTT0MmdHJhZGU7IEVkZ2UgTUNVOiBFbmNyeXB0ZWQgYm9vdCIsInJpZCI6InJhdmlraXJhbi5odkBpbmZpbmVvbi5jb20iLCJEb2MgdmVyc2lvbiI6IjIuMy4wIiwiRG9jIExhbmd1YWdlIjoiRW5nbGlzaCIsIkRvYyBEaXZpc2lvbiI6Ik1DRCIsIkRvYyBCVSI6IklDVyIsIkRvYyBGYW1pbHkiOiJQU09DIn0=)
+[Provide feedback on this code example.](https://yourvoice.infineon.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyNDE1MjEiLCJTcGVjIE51bWJlciI6IjAwMi00MTUyMSIsIkRvYyBUaXRsZSI6IlBTT0MmdHJhZGU7IEVkZ2UgTUNVOiBFbmNyeXB0ZWQgYm9vdCIsInJpZCI6InJhdmlraXJhbi5odkBpbmZpbmVvbi5jb20iLCJEb2MgdmVyc2lvbiI6IjIuNC4wIiwiRG9jIExhbmd1YWdlIjoiRW5nbGlzaCIsIkRvYyBEaXZpc2lvbiI6Ik1DRCIsIkRvYyBCVSI6IklDVyIsIkRvYyBGYW1pbHkiOiJQU09DIn0=)
 
 See the [Design and implementation](docs/design_and_implementation.md) for the functional description of this code example.
 
@@ -28,7 +28,7 @@ See the [Design and implementation](docs/design_and_implementation.md) for the f
 
 - GNU Arm&reg; Embedded Compiler v14.2.1 (`GCC_ARM`) – Default value of `TOOLCHAIN`
 - Arm&reg; Compiler v6.22 (`ARM`)
-- IAR C/C++ Compiler v9.50.2 (`IAR`)
+- IAR C/C++ Compiler v9.70.4 (`IAR`)
 - LLVM Embedded Toolchain for Arm&reg; v19.1.5 (`LLVM_ARM`)
 
 
@@ -82,6 +82,43 @@ Add the executable path to the system environment path variable of the host PC.
 To use Edge Protect Tools CLI, is recommended to use "modus-shell", which is installed along with ModusToolbox&trade; located in the *ModusToolbox/tools_x.y* directory.
 
 
+#### Determine silicon revision before using Edge Protect Tools
+
+Prior to executing Edge Protect Tools commands, you must identify the silicon revision (B0 or B1) of your device. Edge Protect Tools v2.0.0 or later includes support for the B1 silicon revision. Commands that require `--target` / `-t` option default to B1 silicon revision, devices with the earlier B0 silicon revision must append the silicon revision `--rev` argument for such commands. Follow the steps below to identify the silicon revision:
+
+1. Execute the following command to identify the silicon revision:
+
+   - For EPC2 devices (KIT_PSE84_EVAL_EPC2 and KIT_PSE84_AI):
+
+    ```
+    edgeprotecttools -t pse8xs2 device-info
+    ```
+
+   > **Note:** Use target '-t pse8xs4' for EPC4 device.
+
+   The output will display device information including the silicon revision. Identify the silicon revision field indicating either Rev. B0 or Rev. B1.
+
+   **Figure 2. Device info output showing silicon revision**
+
+   ![](images/device-info-silicon-revision.png)
+
+2. Use the correct command syntax based on silicon revision:
+
+   While using the Edge Protect Tools commands that require the `--target` / `-t` option, `--rev B0` parameter must be appended for B0 silicons.
+
+   | Silicon revision | Action required |
+   |------------------|-----------------|
+   | B0 | Append `--rev B0` parameter (case-insensitive) to Edge Protect Tools commands that require the `--target/-t` option |
+   | B1 | No additional argument is required |
+
+   **Command usage based on silicon revision**
+
+   | Silicon revision | Command |
+   |------------------|---------|
+   | B0 | `edgeprotecttools -t pse8xs2 --rev B0 init` |
+   | B1 | `edgeprotecttools -t pse8xs2 init` |
+
+
 #### Ownership transfer
 
 Transfer the ownership of the device to yourself before changing the policy file. Follow the steps to transfer ownership. Note that steps 1 to 9 are optional if you have already enabled secured boot on your device – You can then jump on to Step 10 directly.
@@ -105,6 +142,8 @@ Transfer the ownership of the device to yourself before changing the policy file
         ```
         edgeprotecttools -t pse8xs4 init
         ```
+
+    > **Note:** When using any Edge Protect Tools command that requires the `--target` / `-t` option, `--rev B0` parameter must be appended for B0 silicons. For silicon revision B1, no additional argument is needed. See the "Determine silicon revision before using Edge Protect Tools" section in [AN237849 – Getting started with PSOC™ Edge security](https://www.infineon.com/AN237849) for more details on how to identify the silicon revision.
 
 3. Execute the following command to configure the openOCD tools path:
 
@@ -341,6 +380,7 @@ Document title: *CE241521* – *PSOC&trade; Edge MCU:  Encrypted boot*
  2.1.0   | Added support for KIT_PSE84_AI
  2.2.0   | Updated design files to fix ModusToolbox&trade; v3.7 build warnings
  2.3.0   | Added support for KIT_PSE84_HMI
+ 2.4.0   | Added information to determine silicon revision before using Edge Protect Tools commands
 <br>
 
 
